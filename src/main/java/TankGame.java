@@ -1,4 +1,6 @@
 import javax.swing.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class TankGame {
     public static void main(String[] args) {
@@ -11,6 +13,22 @@ public class TankGame {
         frame.pack();   //通知frame物件將其尺寸設定為:可將其內部所有的元件包起來的大小
 
         gameClient.repaint();   //繪出gameClient物件內的圖形
+
+        frame.addKeyListener(new KeyAdapter() {
+            @Override
+            //鍵盤按下
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                gameClient.keyPressed(e);
+                //System.out.println((char)e.getKeyCode());
+            }
+
+            @Override
+            //鍵盤鬆開
+            public void keyReleased(KeyEvent e) {
+                super.keyReleased(e);
+            }
+        });
 
     }
 }
