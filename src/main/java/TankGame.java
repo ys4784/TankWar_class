@@ -27,6 +27,7 @@ public class TankGame {
             //鍵盤鬆開
             public void keyReleased(KeyEvent e) {
                 super.keyReleased(e);
+                gameClient.keyReleased(e);
             }
         });
 
