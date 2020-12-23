@@ -29,9 +29,12 @@ public class Wall extends GameObject {
         }
     }
 
-//    @Override
-//    public Rectangle getRectangle() {
-//        return horizontal ? new Rectangle(x, y, bricks * width, height) :
-//                new Rectangle(x, y, width, bricks * height);
-//    }
+    @Override
+    //Override 矩形類別
+    public Rectangle getRectangle() {
+        //如果 wall 為水平排列，則此矩形物件之 width 為 width X 磚塊數
+        //反之，若非為水平排列，則此矩形物件之 height 為 height X 磚塊數
+        return horizontal ? new Rectangle(x, y, bricks * width, height) :
+                new Rectangle(x, y, width, bricks * height);
+    }
 }

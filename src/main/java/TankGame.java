@@ -5,11 +5,15 @@ import java.awt.event.KeyEvent;
 
 public class TankGame {
 
-    public static GameClient gameClient;
+    private static GameClient gameClient;
+
+    public static GameClient getGameClient() {
+        return gameClient;
+    }
 
     public static void main(String[] args) {
         JFrame frame = new JFrame();    //實體化JFrame物件(視窗顯示)
-        GameClient gameClient = new GameClient();
+        gameClient = new GameClient();
         frame.add(gameClient);  //裝載gameClient物件
         frame.setTitle("坦克大戰"); //設定視窗標題名稱
         frame.setVisible(true); //設定遊戲視窗為可視

@@ -151,4 +151,16 @@ public class GameClient extends JComponent {
     public int getScreenHeight() {
         return screenHeight;
     }
+
+    public ArrayList<Wall> getWalls() {
+        return walls;
+    }
+
+    public ArrayList<GameObject> getGameObjects() {
+        return gameObjects;
+    }
+
+    public ArrayList<Tank> getEnemyTank() {
+        return enemyTank;
+    }
 }

@@ -22,7 +22,7 @@ public class Tank extends GameObject {
     public Tank(int x, int y, Direction direction, boolean enemy, Image[] image) {
         super(x, y, image);
         this.direction = direction;
-        speed = 15;
+        speed = 20;
         this.enemy = enemy;
     }
 
@@ -56,6 +56,11 @@ public class Tank extends GameObject {
 
     //移動
     public void move() {
+        //紀錄碰撞前座標
+        oldX = x;
+        oldY = y;
+
+        //移動
         switch (direction) {
             case UP:
                 y -= speed;
@@ -87,17 +92,9 @@ public class Tank extends GameObject {
                 x += speed;
                 break;
         }
-//        if (x < 0) {
-//            x = 0;
-//        } else if (x > TankGame.gameClient.getScreenWidth() - width) {
-//            x = TankGame.gameClient.getScreenWidth() - width;
-//        }
-//
-//        if (y < 0) {
-//            y = 0;
-//        } else if (y > TankGame.gameClient.getScreenHeight() - height) {
-//            y = TankGame.gameClient.getScreenHeight() - height;
-//        }
+
+        //偵測碰撞
+        collision();
     }
 
     //偵測方向
@@ -130,6 +127,37 @@ public class Tank extends GameObject {
         }
         //八方向皆停止，回傳true( isStop()為true )
         return true;
+    }
+
+
+    //偵測碰撞
+    public void collision() {
+
+        //邊界碰撞
+        if (x < 0) {
+            x = 0;
+        } else if (x > TankGame.getGameClient().getScreenWidth() - width) {
+            x = TankGame.getGameClient().getScreenWidth() - width;
+        }
+
+        if (y < 0) {
+            y = 0;
+        } else if (y > TankGame.getGameClient().getScreenHeight() - height) {
+            y = TankGame.getGameClient().getScreenHeight() - height;
+        }
+
+        //牆面碰撞
+        for (Wall wall : TankGame.getGameClient().getWalls()) {
+            //getRectangle().intersects()，偵測兩矩形物件是否碰撞，假如是，回傳true
+            if (getRectangle().intersects(wall.getRectangle())) {
+                //使座標回復到碰撞前座標
+                x = oldX;
+                y = oldY;
+                return;
+            }
+        }
+
+
     }
 
 
