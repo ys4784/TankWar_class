@@ -1,11 +1,9 @@
 import object.Direction;
-import object.Tank;
-import object.Wall;
+import object.GameObject;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 //JComponent圖形顯示
@@ -14,6 +12,9 @@ public class GameClient extends JComponent {
     //設定視窗大小
     private int screenWidth;
     private int screenHeight;
+
+    //設定父類別集合
+    private ArrayList<GameObject> gameObjects = new ArrayList<>();
 
     //設定玩家坦克
     private Tank playerTank;
@@ -57,21 +58,37 @@ public class GameClient extends JComponent {
 
 
     public void init() {
+        Image[] brickImage = {Tools.getImage("brick.png")};
+        Image[] iTankImage = new Image[8];
+        Image[] eTankImage = new Image[8];
+
+        String[] sub = {"U.png", "D.png", "L.png", "R.png", "LU.png", "RU.png", "LD.png", "RD.png"};
+
+        for (int i = 0; i < iTankImage.length; i++) {
+            iTankImage[i] = Tools.getImage("iTank" + sub[i]);
+            eTankImage[i] = Tools.getImage("eTank" + sub[i]);
+        }
+
         //玩家坦克
-        playerTank = new Tank(492, 100, Direction.DOWN);
+        playerTank = new Tank(screenWidth / 2, screenHeight / 8, Direction.DOWN, iTankImage);
 
         //敵方坦克
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 4; j++) {
                 //用 j 調整 x 的位置，用 i 調整 y 的位置
-                enemyTank.add(new Tank(350 + j * 80, 500 + 80 * i, Direction.UP, true));
+                enemyTank.add(new Tank(380 + j * 80, 500 + 80 * i, Direction.UP, true, eTankImage));
             }
         }
 
         //圍牆
-        walls.add(new Wall(150,300,false,13));
-        walls.add(new Wall(850,300,false,13));
-        walls.add(new Wall(180,200,true,21));
+        walls.add(new Wall(screenWidth / 5, screenHeight / 2, false, 10, brickImage));
+        walls.add(new Wall(screenWidth * 4 / 5, screenHeight / 2, false, 10, brickImage));
+        walls.add(new Wall(screenWidth / 5 + 16, screenHeight / 3, true, 19, brickImage));
+
+
+        gameObjects.add(playerTank);
+        gameObjects.addAll(enemyTank);
+        gameObjects.addAll(walls);
     }
 
 
@@ -82,15 +99,9 @@ public class GameClient extends JComponent {
         g.setColor(Color.black);
         //填充範圍為整個視窗 [(0,0)到(screenWidth,screenHeight)]
         g.fillRect(0, 0, screenWidth, screenHeight);
-        //玩家坦克
-        playerTank.draw(g);
-        //敵方坦克
-        for (Tank tank : enemyTank) {
-            tank.draw(g);
-        }
-        //牆面
-        for (Wall wall : walls) {
-            wall.draw(g);
+        //繪製元件
+        for (GameObject gameObject : gameObjects) {
+            gameObject.draw(g);
         }
 
     }
@@ -131,5 +142,13 @@ public class GameClient extends JComponent {
                 dirs[3] = false;
                 break;
         }
+    }
+
+    public int getScreenWidth() {
+        return screenWidth;
+    }
+
+    public int getScreenHeight() {
+        return screenHeight;
     }
 }

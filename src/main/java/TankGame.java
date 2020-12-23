@@ -1,8 +1,12 @@
+import javax.management.relation.Relation;
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class TankGame {
+
+    public static GameClient gameClient;
+
     public static void main(String[] args) {
         JFrame frame = new JFrame();    //實體化JFrame物件(視窗顯示)
         GameClient gameClient = new GameClient();

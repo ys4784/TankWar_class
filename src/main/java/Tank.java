@@ -1,13 +1,11 @@
-package object;
+import object.Direction;
+import object.GameObject;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class Tank {
+public class Tank extends GameObject {
 
-    //設定坦克座標
-    private int x;
-    private int y;
     //設定坦克移動速度
     private int speed;
     //設定方向
@@ -17,41 +15,15 @@ public class Tank {
     //設定敵我識別
     private boolean enemy;
 
-    public Tank(int x, int y, Direction direction) {
-        this(x, y, direction, false);
+    public Tank(int x, int y, Direction direction, Image[] image) {
+        this(x, y, direction, false, image);
     }
 
-    public Tank(int x, int y, Direction direction, boolean enemy) {
-        this.x = x;
-        this.y = y;
+    public Tank(int x, int y, Direction direction, boolean enemy, Image[] image) {
+        super(x, y, image);
         this.direction = direction;
         speed = 15;
         this.enemy = enemy;
-    }
-
-    public Image getImage() {
-
-        String name = enemy ? "etank" : "itank";
-        
-        if (direction == Direction.UP)
-            return new ImageIcon("assets/images/"+name+"U.png").getImage();
-        if (direction == Direction.DOWN)
-            return new ImageIcon("assets/images/"+name+"D.png").getImage();
-        if (direction == Direction.LEFT)
-            return new ImageIcon("assets/images/"+name+"L.png").getImage();
-        if (direction == Direction.RIGHT)
-            return new ImageIcon("assets/images/"+name+"R.png").getImage();
-
-        if (direction == Direction.UP_LEFT)
-            return new ImageIcon("assets/images/"+name+"LU.png").getImage();
-        if (direction == Direction.DOWN_LEFT)
-            return new ImageIcon("assets/images/"+name+"LD.png").getImage();
-        if (direction == Direction.UP_RIGHT)
-            return new ImageIcon("assets/images/"+name+"RU.png").getImage();
-        if (direction == Direction.DOWN_RIGHT)
-            return new ImageIcon("assets/images/"+name+"RD.png").getImage();
-
-        return null;
     }
 
     public void setX(int x) {
@@ -102,23 +74,30 @@ public class Tank {
                 y -= speed;
                 x -= speed;
                 break;
-
             case UP_RIGHT:
                 y -= speed;
                 x += speed;
                 break;
-
             case DOWN_LEFT:
                 y += speed;
                 x -= speed;
                 break;
-
             case DOWN_RIGHT:
                 y += speed;
                 x += speed;
                 break;
         }
-
+//        if (x < 0) {
+//            x = 0;
+//        } else if (x > TankGame.gameClient.getScreenWidth() - width) {
+//            x = TankGame.gameClient.getScreenWidth() - width;
+//        }
+//
+//        if (y < 0) {
+//            y = 0;
+//        } else if (y > TankGame.gameClient.getScreenHeight() - height) {
+//            y = TankGame.gameClient.getScreenHeight() - height;
+//        }
     }
 
     //偵測方向
@@ -138,7 +117,8 @@ public class Tank {
             determineDirection();
             move();
         }
-        g.drawImage(getImage(), x, y, null);
+        //方向的編號 direction.ordinal()
+        g.drawImage(image[direction.ordinal()], x, y, null);
     }
 
     public boolean isStop() {
