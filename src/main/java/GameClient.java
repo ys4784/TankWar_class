@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 //JComponent圖形顯示
 public class GameClient extends JComponent {
@@ -19,11 +20,8 @@ public class GameClient extends JComponent {
     //設定玩家坦克
     private Tank playerTank;
 
-    //設定敵方坦克
-    private ArrayList<Tank> enemyTank = new ArrayList<>();
-
-    //設定牆面
-    private ArrayList<Wall> walls = new ArrayList<>();
+    //新增砲彈圖片(全域變數)
+    public static Image[] bulletImage = new Image[8];
 
     //執行緒自動繪製判斷條件
     private boolean stop;
@@ -67,28 +65,26 @@ public class GameClient extends JComponent {
         for (int i = 0; i < iTankImage.length; i++) {
             iTankImage[i] = Tools.getImage("iTank" + sub[i]);
             eTankImage[i] = Tools.getImage("eTank" + sub[i]);
+            bulletImage[i] = Tools.getImage("missile" + sub[i]);
         }
 
         //玩家坦克
         playerTank = new Tank(screenWidth / 2, screenHeight / 8, Direction.DOWN, iTankImage);
+        gameObjects.add(playerTank);
 
         //敵方坦克
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 4; j++) {
                 //用 j 調整 x 的位置，用 i 調整 y 的位置
-                enemyTank.add(new Tank(380 + j * 80, 500 + 80 * i, Direction.UP, true, eTankImage));
+                gameObjects.add(new Tank(320 + j * 120, 400 + 120 * i,
+                        Direction.UP, true, eTankImage));
             }
         }
 
         //圍牆
-        walls.add(new Wall(screenWidth / 5, screenHeight / 2, false, 10, brickImage));
-        walls.add(new Wall(screenWidth * 4 / 5, screenHeight / 2, false, 10, brickImage));
-        walls.add(new Wall(screenWidth / 5 + 16, screenHeight / 3, true, 19, brickImage));
-
-
-        gameObjects.add(playerTank);
-        gameObjects.addAll(enemyTank);
-        gameObjects.addAll(walls);
+        gameObjects.add(new Wall(screenWidth / 5, screenHeight / 2, false, 10, brickImage));
+        gameObjects.add(new Wall(screenWidth * 4 / 5, screenHeight / 2, false, 10, brickImage));
+        gameObjects.add(new Wall(screenWidth / 5 + 16, screenHeight / 3, true, 19, brickImage));
     }
 
 
@@ -104,9 +100,21 @@ public class GameClient extends JComponent {
             gameObject.draw(g);
         }
 
+        Iterator<GameObject> iterator = gameObjects.iterator();
+        while (iterator.hasNext()) {
+            if (!(iterator.next()).isAlive()) {
+                iterator.remove();
+            }
+        }
+    }
+
+    //新增物件
+    public void addGameObject(GameObject object) {
+        gameObjects.add(object);
     }
 
 
+    //按鍵壓下
     public void keyPressed(KeyEvent e) {
         boolean[] dirs = playerTank.getDirs();
         switch (e.getKeyCode()) {
@@ -122,10 +130,14 @@ public class GameClient extends JComponent {
             case KeyEvent.VK_RIGHT:
                 dirs[3] = true;
                 break;
+            case KeyEvent.VK_SPACE:
+                playerTank.fire();
+                break;
         }
     }
 
 
+    //按鍵釋放
     public void keyReleased(KeyEvent e) {
         boolean[] dirs = playerTank.getDirs();
         switch (e.getKeyCode()) {
@@ -152,15 +164,7 @@ public class GameClient extends JComponent {
         return screenHeight;
     }
 
-    public ArrayList<Wall> getWalls() {
-        return walls;
-    }
-
     public ArrayList<GameObject> getGameObjects() {
         return gameObjects;
-    }
-
-    public ArrayList<Tank> getEnemyTank() {
-        return enemyTank;
     }
 }
