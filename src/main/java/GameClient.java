@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 //JComponent圖形顯示
 public class GameClient extends JComponent {
@@ -13,6 +14,8 @@ public class GameClient extends JComponent {
     //設定視窗大小
     private int screenWidth;
     private int screenHeight;
+
+    private CopyOnWriteArrayList<GameObject> objects = new CopyOnWriteArrayList<>();
 
     //設定父類別集合
     private ArrayList<GameObject> gameObjects = new ArrayList<>();
@@ -28,7 +31,7 @@ public class GameClient extends JComponent {
 
 
     GameClient() {
-        this(1024, 768);
+        this(960, 640);
     }
 
 
@@ -70,22 +73,33 @@ public class GameClient extends JComponent {
         }
 
         //玩家坦克
-        playerTank = new Tank(screenWidth / 2, screenHeight / 8, Direction.DOWN, iTankImage);
+        playerTank = new Tank(0, 0, Direction.DOWN_RIGHT, iTankImage);
         gameObjects.add(playerTank);
 
+
         //敵方坦克
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 4; j++) {
-                //用 j 調整 x 的位置，用 i 調整 y 的位置
-                gameObjects.add(new Tank(320 + j * 120, 400 + 120 * i,
-                        Direction.UP, true, eTankImage));
-            }
-        }
+//        gameObjects.add(new Tank(screenWidth - eTankImage[4].getWidth(null),
+//                screenHeight - eTankImage[4].getHeight(null),
+//                Direction.UP_LEFT, true, eTankImage));
+
+        gameObjects.add(new EnemyTank(screenWidth - (eTankImage[4].getWidth(null) * 3),
+                screenHeight - eTankImage[4].getHeight(null),
+                Direction.UP_LEFT, eTankImage));
+
+//        gameObjects.add(new Tank(screenWidth - eTankImage[4].getWidth(null),
+//                screenHeight - (eTankImage[4].getHeight(null) * 3),
+//                Direction.UP_LEFT, true, eTankImage));
+
+//        for (int i = 0; i < 2; i++) {
+//            for (int j = 0; j < 3; j++) {
+//                //用 j 調整 x 的位置，用 i 調整 y 的位置
+//                gameObjects.add(new Tank(320 + j * 120, 400 + 120 * i,
+//                        Direction.UP, true, eTankImage));
+//            }
+//        }
 
         //圍牆
-        gameObjects.add(new Wall(screenWidth / 5, screenHeight / 2, false, 10, brickImage));
-        gameObjects.add(new Wall(screenWidth * 4 / 5, screenHeight / 2, false, 10, brickImage));
-        gameObjects.add(new Wall(screenWidth / 5 + 16, screenHeight / 3, true, 19, brickImage));
+        gameObjects.add(new Wall(screenWidth / 30 * 15, screenHeight / 20 * 5, false, 10, brickImage));
     }
 
 
@@ -107,7 +121,12 @@ public class GameClient extends JComponent {
                 iterator.remove();
             }
         }
-        System.out.println("當前物件數量："+gameObjects.size());
+        for (GameObject object : objects) {
+            if (!object.isAlive()) {
+                objects.remove(object);
+            }
+        }
+        System.out.println("當前物件數量：" + gameObjects.size());
     }
 
     //新增物件

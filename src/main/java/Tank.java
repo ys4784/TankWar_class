@@ -11,7 +11,7 @@ public class Tank extends GameObject {
     //設定方向
     protected Direction direction;
     //設定方向(上下左右)變數
-    private boolean[] dirs = new boolean[4];
+    protected boolean[] dirs = new boolean[4];
     //設定敵我識別
     private boolean enemy;
 
@@ -151,42 +151,47 @@ public class Tank extends GameObject {
     }
 
 
-    //邊界偵測
+    //邊界碰撞
     public boolean collisionBound() {
-        boolean collision = false;
+        boolean isCollision = false;
         //邊界碰撞
         if (x < 0) {
             x = 0;
-            collision = true;
+            isCollision = true;
         } else if (x > TankGame.getGameClient().getScreenWidth() - width) {
             x = TankGame.getGameClient().getScreenWidth() - width;
-            collision = true;
+            isCollision = true;
         }
         if (y < 0) {
             y = 0;
-            collision = true;
+            isCollision = true;
         } else if (y > TankGame.getGameClient().getScreenHeight() - height) {
             y = TankGame.getGameClient().getScreenHeight() - height;
-            collision = true;
+            isCollision = true;
         }
-        return collision;
+        return isCollision;
+    }
+
+    //物件碰撞
+    public boolean collisionObject() {
+        boolean isCollision = false;
+        for (GameObject gameObject : TankGame.getGameClient().getGameObjects()) {
+            if (gameObject != this && getRectangle().intersects(gameObject.getRectangle())) {
+                x = oldX;
+                y = oldY;
+                isCollision = true;
+            }
+        }
+        return isCollision;
     }
 
     //偵測碰撞
-    public void collision() {
-        //邊界碰撞
-        collisionBound();
-
-        //與其他物件碰撞
-        for (GameObject object : TankGame.getGameClient().getGameObjects()) {
-            //object != this 如果當前物件不等於自己(玩家坦克)
-            //getRectangle().intersects()，偵測兩矩形物件是否碰撞，假如是，回傳true
-            if (object != this && getRectangle().intersects(object.getRectangle())) {
-                //使座標回復到碰撞前座標
-                x = oldX;
-                y = oldY;
-            }
+    public boolean collision() {
+        boolean isCollision = collisionBound();
+        if(!isCollision){
+            isCollision = collisionObject();
         }
+        return isCollision;
     }
 
 

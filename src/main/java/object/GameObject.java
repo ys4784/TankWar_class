@@ -40,5 +40,13 @@ public abstract class GameObject {
         this.alive = alive;
     }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
     public abstract void draw(Graphics g);
 }
