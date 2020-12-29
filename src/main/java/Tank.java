@@ -151,19 +151,31 @@ public class Tank extends GameObject {
     }
 
 
-    //偵測碰撞
-    public void collision() {
+    //邊界偵測
+    public boolean collisionBound() {
+        boolean collision = false;
         //邊界碰撞
         if (x < 0) {
             x = 0;
+            collision = true;
         } else if (x > TankGame.getGameClient().getScreenWidth() - width) {
             x = TankGame.getGameClient().getScreenWidth() - width;
+            collision = true;
         }
         if (y < 0) {
             y = 0;
+            collision = true;
         } else if (y > TankGame.getGameClient().getScreenHeight() - height) {
             y = TankGame.getGameClient().getScreenHeight() - height;
+            collision = true;
         }
+        return collision;
+    }
+
+    //偵測碰撞
+    public void collision() {
+        //邊界碰撞
+        collisionBound();
 
         //與其他物件碰撞
         for (GameObject object : TankGame.getGameClient().getGameObjects()) {
@@ -173,10 +185,10 @@ public class Tank extends GameObject {
                 //使座標回復到碰撞前座標
                 x = oldX;
                 y = oldY;
-                return;
             }
         }
     }
 
 
 }
+

@@ -100,7 +100,7 @@ public class GameClient extends JComponent {
         for (GameObject gameObject : gameObjects) {
             gameObject.draw(g);
         }
-
+        //清除物件
         Iterator<GameObject> iterator = gameObjects.iterator();
         while (iterator.hasNext()) {
             if (!(iterator.next()).isAlive()) {

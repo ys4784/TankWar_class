@@ -22,29 +22,27 @@ public class Bullet extends Tank {
     @Override
     //碰撞偵測
     public void collision() {
-
-
         for (GameObject object : TankGame.getGameClient().getGameObjects()) {
             //判別物件是否為自己，如果true，則continue
-            if (object!= this) {
+            if (object == this) {
                 continue;
             }
 
             //判別物件是否為我方坦克，如果true，則continue
-            else if (object instanceof Tank && ((Tank) object).isEnemy() == isEnemy()) {
+            if (object instanceof Tank && ((Tank) object).isEnemy() == isEnemy()) {
                 continue;
             }
 
-            else if(object instanceof Tank){
-                x = oldX;
-                y = oldY;
-                return;            }
+            //與其他物件進行碰撞偵測
+            if(getRectangle().intersects(object.getRectangle())) {
+                alive=false;
+                if(object instanceof Tank){
+                    object.setAlive(false);
+                }
+            }
 
-            //與其他物件進行碰撞偵測(getRectangle().intersects(object.getRectangle()))
-            else {
-                x = oldX;
-                y = oldY;
-                return;
+            if(collisionBound()){
+                alive=false;
             }
         }
     }
