@@ -23,31 +23,28 @@ public class Bullet extends Tank {
     //碰撞偵測
     public void collision() {
 
-        if (collisionBound()) {
-            alive = false;
-            return;
-        }
 
         for (GameObject object : TankGame.getGameClient().getGameObjects()) {
             //判別物件是否為自己，如果true，則continue
-            if (object == this) {
-                alive = true;
+            if (object!= this) {
                 continue;
             }
 
             //判別物件是否為我方坦克，如果true，則continue
-            if (object instanceof Tank && ((Tank) object).isEnemy() == isEnemy()) {
-                alive = true;
+            else if (object instanceof Tank && ((Tank) object).isEnemy() == isEnemy()) {
                 continue;
             }
 
-            if(object instanceof Tank){
-                setAlive(false);
-            }
+            else if(object instanceof Tank){
+                x = oldX;
+                y = oldY;
+                return;            }
 
-            //與其他物件進行碰撞偵測
-            if (getRectangle().intersects(object.getRectangle())) {
-                alive = false;
+            //與其他物件進行碰撞偵測(getRectangle().intersects(object.getRectangle()))
+            else {
+                x = oldX;
+                y = oldY;
+                return;
             }
         }
     }

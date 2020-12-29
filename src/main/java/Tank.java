@@ -151,8 +151,8 @@ public class Tank extends GameObject {
     }
 
 
-    //邊界偵測
-    public boolean collisionBound() {
+    //偵測碰撞
+    public void collision() {
         //邊界碰撞
         if (x < 0) {
             x = 0;
@@ -164,14 +164,7 @@ public class Tank extends GameObject {
         } else if (y > TankGame.getGameClient().getScreenHeight() - height) {
             y = TankGame.getGameClient().getScreenHeight() - height;
         }
-        return alive;
-    }
 
-    //偵測碰撞
-    public void collision() {
-        if(collisionBound()){
-            return;
-        }
         //與其他物件碰撞
         for (GameObject object : TankGame.getGameClient().getGameObjects()) {
             //object != this 如果當前物件不等於自己(玩家坦克)

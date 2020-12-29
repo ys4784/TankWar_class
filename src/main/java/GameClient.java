@@ -52,6 +52,7 @@ public class GameClient extends JComponent {
                 }
             }
         }).start();
+
     }
 
 
@@ -106,6 +107,7 @@ public class GameClient extends JComponent {
                 iterator.remove();
             }
         }
+        System.out.println("當前物件數量："+gameObjects.size());
     }
 
     //新增物件
